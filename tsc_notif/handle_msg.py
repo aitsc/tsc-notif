@@ -5,6 +5,7 @@ def main(
     token: str = '',
     title: str = 'supervisor',
 ):
+    global MSG, CONTEXT
     if MSG['headers'].get('eventname') in {
         'PROCESS_STATE_FATAL',
         'PROCESS_STATE_EXITED',
