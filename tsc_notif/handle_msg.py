@@ -1,12 +1,14 @@
 from .utils import push_msg, PushPlusSend
 
 
-def main(
+def msg_callback(
+    msg: dict,
+    context: dict = None,
     token: str = '',
     title: str = 'supervisor',
+    **kwargs,
 ):
-    global MSG, CONTEXT
-    if MSG['headers'].get('eventname') in {
+    if msg['headers'].get('eventname') in {
         'PROCESS_STATE_FATAL',
         'PROCESS_STATE_EXITED',
         'PROCESS_COMMUNICATION',
@@ -14,7 +16,7 @@ def main(
         push_msg(PushPlusSend(
             token=token,
             title=title,
-            content=MSG,
+            content=msg,
             template='json',
         ))
 
@@ -42,7 +44,4 @@ if __name__ == '__main__':
     }
     CONTEXT = {}
     
-    main()
-    exit(0)
-
-# main()
+    msg_callback(MSG)

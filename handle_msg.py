@@ -1,7 +1,8 @@
-from tsc_notif.handle_msg import main
+from tsc_notif.handle_msg import msg_callback
 
-
-main(
+MSG: dict
+msg_callback(
+    msg=MSG,
     token='',
     title='supervisor',
 )
