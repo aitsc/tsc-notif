@@ -1,5 +1,6 @@
-from .utils import push_msg, PushPlusSend
 import json
+from .utils import push_msg, PushPlusSend
+from .supervisor_eventlistener import print
 
 
 def msg_callback(
@@ -14,12 +15,13 @@ def msg_callback(
         'PROCESS_STATE_EXITED',
         'PROCESS_COMMUNICATION',
     }:
-        push_msg(PushPlusSend(
+        m = PushPlusSend(
             token=token,
             title=title,
             content=json.dumps(msg),
             template='json',
-        ))
+        )
+        print('push_msg:', push_msg(m))
 
 
 if __name__ == '__main__':
