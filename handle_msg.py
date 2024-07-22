@@ -4,5 +4,4 @@ MSG: dict
 msg_callback(
     msg=MSG,
     token='',
-    title='supervisor',
 )

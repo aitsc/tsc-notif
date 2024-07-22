@@ -35,6 +35,7 @@ def msg_callback(
 
 if __name__ == '__main__':
     MSG = {
+        "hostname": "test",
         "time": "2024-07-22T18:06:40.177068+08:00",
         "time_zone": "Asia/Shanghai",
         "headers": {

@@ -6,6 +6,7 @@ import runpy
 import os
 import argparse
 from typing import Optional
+import socket
 
 
 def write_stdout(s: str, flush: bool = True):
@@ -72,6 +73,7 @@ def get_msg(tzinfo: ZoneInfo) -> dict:
             line, data = line.split('\n', 1)
         payload = parse_notif(line)
     msg = {
+        'hostname': socket.gethostname(),
         'time': datetime.now(tz=tzinfo).isoformat(),
         'time_zone': tzinfo.key,
         'headers': headers,
