@@ -1,4 +1,5 @@
 from .utils import push_msg, PushPlusSend
+import json
 
 
 def msg_callback(
@@ -16,7 +17,7 @@ def msg_callback(
         push_msg(PushPlusSend(
             token=token,
             title=title,
-            content=msg,
+            content=json.dumps(msg),
             template='json',
         ))
 
