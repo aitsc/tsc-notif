@@ -18,7 +18,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'supervisor-eventlistener=tsc_auto.supervisor_eventlistener:main',
+            'supervisor-eventlistener=tsc_notif.supervisor_eventlistener:main',
         ],
     },
     python_requires='>=3.7',
