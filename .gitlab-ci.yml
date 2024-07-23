@@ -28,7 +28,7 @@ deploy:
     - python3 -m twine upload dist/* -u __token__ -p $PYPI_ACCESS_TOKEN --skip-existing
     # github
     - URL=$(cat url.txt | tr -d '[:space:]')
-    - REPO_URL=$(echo $URL | sed "s|https://|https://git:$GITHUB_ACCESS_TOKEN@|")
-    - git push "$REPO_URL" $CI_COMMIT_BRANCH
+    - REPO_URL=$(echo $URL | sed "s|https://|https://git:$GITHUB_ACCESS_TOKEN@|").git
+    - git push "$REPO_URL" HEAD:$CI_COMMIT_BRANCH
   environment:
     name: production
