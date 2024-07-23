@@ -29,6 +29,6 @@ deploy:
     # github
     - URL=$(cat url.txt | tr -d '[:space:]')
     - REPO_URL=$(echo $URL | sed "s|https://|https://git:$GITHUB_ACCESS_TOKEN@|").git
-    - git push "$REPO_URL" HEAD:$CI_COMMIT_BRANCH
+    - git push "$REPO_URL" HEAD:refs/heads/$CI_COMMIT_BRANCH
   environment:
     name: production
