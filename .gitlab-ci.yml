@@ -22,9 +22,9 @@ deploy:
     - REPO_URL=$(echo $CI_PROJECT_URL | sed "s|https://|https://git:$GITLAB_ACCESS_TOKEN@|").git
     - git push "$REPO_URL" "v$VERSION"
     # pipy
-    - pip install twine
+    - pip3 install twine
     - rm -rf dist/
-    - python setup.py sdist build
+    - python3 setup.py sdist build
     - twine upload dist/* -u __token__ -p $PYPI_ACCESS_TOKEN
     # github
     - URL=$(cat url.txt | tr -d '[:space:]')
