@@ -7,10 +7,15 @@ deploy:
     changes:
       - version.txt
   before_script:
-    - VERSION=$(cat version.txt | tr -d '[:space:]')
+    - |-
+      if [ ! -f version.txt ]; then
+        echo "version.txt file not found, skipping deploy."
+        exit 0
+      fi
+    - VERSION=$(<version.txt tr -d '[:space:]')
     - |-
       if echo "$VERSION" | grep -q "dev"; then
-        echo "Version contains 'dev', skipping tagging and pushing."
+        echo "Version contains 'dev', skipping deploy."
         exit 0
       fi
   script:
@@ -27,7 +32,7 @@ deploy:
     - python3 setup.py sdist build
     - python3 -m twine upload dist/* -u __token__ -p $PYPI_ACCESS_TOKEN --skip-existing
     # github
-    - URL=$(cat url.txt | tr -d '[:space:]')
+    - URL=$(<url.txt tr -d '[:space:]')
     - REPO_URL=$(echo $URL | sed "s|https://|https://git:$GITHUB_ACCESS_TOKEN@|").git
     - git push "$REPO_URL" HEAD:refs/heads/$CI_COMMIT_BRANCH
     - git push "$REPO_URL" "v$VERSION"
