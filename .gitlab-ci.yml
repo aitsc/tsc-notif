@@ -25,7 +25,7 @@ deploy:
     - pip3 install twine
     - rm -rf dist/
     - python3 setup.py sdist build
-    - twine upload dist/* -u __token__ -p $PYPI_ACCESS_TOKEN
+    - python3 -m twine upload dist/* -u __token__ -p $PYPI_ACCESS_TOKEN
     # github
     - URL=$(cat url.txt | tr -d '[:space:]')
     - REPO_URL=$(echo $URL | sed "s|https://|https://git:$GITHUB_ACCESS_TOKEN@|")
