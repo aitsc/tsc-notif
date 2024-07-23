@@ -26,7 +26,7 @@ deploy:
       fi
     - REPO_URL=$(echo $CI_PROJECT_URL | sed "s|https://|https://git:$GITLAB_ACCESS_TOKEN@|").git
     - git push "$REPO_URL" "v$VERSION"
-    # pipy
+    # pypi
     - pip3 install twine
     - rm -rf dist/
     - python3 setup.py sdist build
