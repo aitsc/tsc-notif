@@ -1,8 +1,8 @@
 stages:
-  - tag
+  - deploy
 
-tag_version:
-  stage: tag
+deploy:
+  stage: deploy
   only:
     changes:
       - version.txt
@@ -14,11 +14,21 @@ tag_version:
         exit 0
       fi
   script:
+    # tag
     - |-
       if ! git rev-parse "v$VERSION" >/dev/null 2>&1; then
         git tag -a "v$VERSION" -m "Automatic release version $VERSION"
       fi
     - REPO_URL=$(echo $CI_PROJECT_URL | sed "s|https://|https://git:$GITLAB_ACCESS_TOKEN@|").git
     - git push "$REPO_URL" "v$VERSION"
+    # pipy
+    - pip install twine
+    - rm -rf dist/
+    - python setup.py sdist build
+    - twine upload dist/* -u __token__ -p $PYPI_ACCESS_TOKEN
+    # github
+    - URL=$(cat url.txt | tr -d '[:space:]')
+    - REPO_URL=$(echo $URL | sed "s|https://|https://git:$GITHUB_ACCESS_TOKEN@|")
+    - git push "$REPO_URL"
   environment:
     name: production
