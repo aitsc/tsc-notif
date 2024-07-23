@@ -1,1 +1,1 @@
-https://github.com/aitsc/-tsc-notif
+https://github.com/aitsc/tsc-notif
