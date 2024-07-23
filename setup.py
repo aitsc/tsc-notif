@@ -3,7 +3,7 @@ import os
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-version_txt = os.path.join(here, 'tsc_notif/version.txt')
+version_txt = os.path.join(here, 'version.txt')
 with open(version_txt, 'r') as f:
     version = f.read().strip()
     
