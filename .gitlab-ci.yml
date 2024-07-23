@@ -6,8 +6,14 @@ tag_version:
   only:
     changes:
       - version.txt
-  script:
+  before_script:
     - VERSION=$(cat version.txt | tr -d '[:space:]')
+    - |-
+      if echo "$VERSION" | grep -q "dev"; then
+        echo "Version contains 'dev', skipping tagging and pushing."
+        exit 0
+      fi
+  script:
     - |-
       if ! git rev-parse "v$VERSION" >/dev/null 2>&1; then
         git tag -a "v$VERSION" -m "Automatic release version $VERSION"
