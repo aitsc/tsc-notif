@@ -27,6 +27,7 @@ deploy:
     - python3 setup.py sdist build
     - python3 -m twine upload dist/* -u __token__ -p $PYPI_ACCESS_TOKEN --skip-existing
     # github
+    - git branch
     - URL=$(cat url.txt | tr -d '[:space:]')
     - REPO_URL=$(echo $URL | sed "s|https://|https://git:$GITHUB_ACCESS_TOKEN@|")
     - git push "$REPO_URL"
