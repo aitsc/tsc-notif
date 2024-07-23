@@ -44,8 +44,6 @@ def push_msg(params: Union[dict, PushPlusSend]) -> dict:
     res = requests.get('https://www.pushplus.plus/send', params=params)
     res.raise_for_status()
     ret = res.json()
-    if ret['code'] != 200:
-        print(ret)
     return ret
 
 
@@ -116,4 +114,4 @@ if __name__ == '__main__':
         template='json',
         channel='mail',
     )
-    push_msg(params)
+    print(push_msg(params))
