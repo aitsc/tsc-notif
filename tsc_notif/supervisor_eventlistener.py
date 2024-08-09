@@ -62,7 +62,7 @@ def parse_notif(line: str) -> Optional[dict]:
     return notif
 
 
-def get_msg(tzinfo: pytz.timezone) -> dict:
+def get_msg(tzinfo: pytz.BaseTzInfo) -> dict:
     '''获取事件通知'''
     line = sys.stdin.readline()
     headers = parse_notif(line)
@@ -75,7 +75,7 @@ def get_msg(tzinfo: pytz.timezone) -> dict:
     msg = {
         'hostname': socket.gethostname(),
         'time': datetime.now(tz=tzinfo).isoformat(),
-        'time_zone': tzinfo.key,
+        'time_zone': tzinfo.zone,
         'headers': headers,
         'payload': payload,
         'data': data,
