@@ -38,10 +38,11 @@ class PushPlusSend(BaseModel):
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
-def push_msg(params: Union[dict, PushPlusSend]) -> dict:
+def push_msg(params: Union[dict, PushPlusSend], url=None) -> dict:
     '''推送消息'''
     params = model_to_dict(params)
-    res = requests.get('https://www.pushplus.plus/send', params=params)
+    url = url or 'https://www.pushplus.plus/send'
+    res = requests.get(url, params=params)
     res.raise_for_status()
     ret = res.json()
     return ret

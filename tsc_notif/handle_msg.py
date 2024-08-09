@@ -10,6 +10,7 @@ def msg_callback(
     token: str = '',
     title: str = 'supervisor',
     search_eventname: str = r'^(PROCESS_STATE_FATAL|PROCESS_STATE_EXITED|PROCESS_COMMUNICATION)',
+    push_url: str = '',
     **kwargs,
 ):
     """消息回调的例子
@@ -30,7 +31,7 @@ def msg_callback(
             template='json',
             **kwargs,
         )
-        print('push_msg:', push_msg(m))
+        print('push_msg:', push_msg(m, url=push_url))
 
 
 if __name__ == '__main__':
