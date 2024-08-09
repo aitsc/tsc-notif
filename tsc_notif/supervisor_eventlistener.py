@@ -1,12 +1,12 @@
 import sys
 import json
 from datetime import datetime
-from zoneinfo import ZoneInfo
 import runpy
 import os
 import argparse
 from typing import Optional
 import socket
+import pytz
 
 
 def write_stdout(s: str, flush: bool = True):
@@ -62,7 +62,7 @@ def parse_notif(line: str) -> Optional[dict]:
     return notif
 
 
-def get_msg(tzinfo: ZoneInfo) -> dict:
+def get_msg(tzinfo: pytz.timezone) -> dict:
     '''获取事件通知'''
     line = sys.stdin.readline()
     headers = parse_notif(line)
@@ -105,7 +105,7 @@ def main():
     parser.add_argument("--time_zone", default='Asia/Shanghai', help='时区')
     args = parser.parse_args()
     
-    tzinfo = ZoneInfo(args.time_zone)
+    tzinfo = pytz.timezone(args.time_zone)
     context = {}  # handle_msg_py 可用的全局变量
     while 1:
         SendEventlistenerMsg.ready()

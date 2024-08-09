@@ -22,6 +22,7 @@ setup(
         'pydantic',
         'tenacity',
         'requests',
+        'pytz',
     ],
     entry_points={
         'console_scripts': [
