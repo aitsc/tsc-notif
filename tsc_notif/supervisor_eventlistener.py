@@ -1,6 +1,6 @@
 import sys
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import runpy
 import os
 import argparse
@@ -43,7 +43,7 @@ class SendEventlistenerMsg:
     @staticmethod
     def fail():
         '''将假定侦听器未能处理该事件，并且该事件将在稍后重新缓冲并再次发送'''
-        write_stdout('RESULT 2\nFAIL')
+        write_stdout('RESULT 4\nFAIL')
 
 
 def parse_notif(line: str) -> Optional[dict]:
@@ -100,17 +100,34 @@ def handle_msg(msg: dict, run_path: str = None, context: dict = None) -> bool:
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--handle_msg_py", default=None, help='处理消息的python文件，会传入全局变量MSG/CONTEXT，留空不执行')
-    parser.add_argument("--time_zone", default='Asia/Shanghai', help='时区')
+    parser = argparse.ArgumentParser(
+        description="Supervisor 事件侦听器",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument("-p", "--handle_msg_py", default=None, help='处理消息的python文件，会传入全局变量MSG/CONTEXT，留空不执行')
+    parser.add_argument("-t", "--time_zone", default='Asia/Shanghai', help='时区')
+    parser.add_argument("-i", "--minimum_interval", type=int, default=7200, help='一个事件再次通知的最小间隔时间, 单位秒。修复其他进程后建议重启这个监听器保证相同事件可以再次通知')
     args = parser.parse_args()
     
     tzinfo = pytz.timezone(args.time_zone)
     context = {}  # handle_msg_py 可用的全局变量
+    events_final_notif_date: dict[tuple, datetime] = {}  # 事件最后通知时间
+    minimum_interval = timedelta(seconds=args.minimum_interval)
     while 1:
         SendEventlistenerMsg.ready()
         msg = get_msg(tzinfo)
-        if handle_msg(msg, args.handle_msg_py, context):
+        event = (
+            msg.get('hostname'),
+            (msg.get('headers') or {}).get('eventname'),
+            (msg.get('payload') or {}).get('processname'),
+            (msg.get('payload') or {}).get('groupname'),
+            (msg.get('payload') or {}).get('from_state'),
+        )
+        if event in events_final_notif_date and datetime.now() - events_final_notif_date[event] < minimum_interval:
+            print(f'{event} 事件通知间隔时间短于 {args.minimum_interval} 秒，忽略')
+            SendEventlistenerMsg.ok()
+        elif handle_msg(msg, args.handle_msg_py, context):
+            events_final_notif_date[event] = datetime.now()
             SendEventlistenerMsg.ok()
         else:
             SendEventlistenerMsg.fail()
