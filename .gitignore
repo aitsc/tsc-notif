@@ -7,3 +7,4 @@ test_*
 log/
 *.pkl
 data
+test.py

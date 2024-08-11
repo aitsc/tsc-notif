@@ -48,6 +48,24 @@ def push_msg(params: Union[dict, PushPlusSend], url=None) -> dict:
     return ret
 
 
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+def push_msg_telegram(token: str, chat_id: str, text: str, url: str = '') -> dict:
+    '''推送消息到 Telegram'''
+    if not url:
+        url = f'https://api.telegram.org/bot{token}/sendMessage'
+    elif token and token not in url:
+        url = f'{url.rstrip("/")}/bot{token}/sendMessage'
+    payload = {
+        'chat_id': chat_id,
+        'text': text,
+        'parse_mode': 'Markdown',
+    }
+    res = requests.post(url, data=payload)
+    res.raise_for_status()
+    ret = res.json()
+    return ret
+
+
 def get_disk_usage(path) -> dict:
     '''获取磁盘使用情况'''
     if os.path.ismount(path):
