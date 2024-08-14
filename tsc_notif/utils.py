@@ -94,6 +94,15 @@ class LimitedNotifier:
         self.last_notif_time = time.time()
         self.notif_count_cont += 1
         return ret
+
+    def push_msg_telegram(self, token: str, chat_id: str, text: str, url: str = '') -> Union[dict, None]:
+        '''推送消息到 Telegram'''
+        if not self.should_notify():
+            return None
+        ret = push_msg_telegram(token, chat_id, text, url)
+        self.last_notif_time = time.time()
+        self.notif_count_cont += 1
+        return ret
     
     def reset_cont(self):
         '''重置连续通知次数'''
